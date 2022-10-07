@@ -19,11 +19,11 @@ app.route('/')
 
     .post((req, res) => {
         console.log(req);
+
+        res.json({'messsage': 'Hi'});
     })
 
     .get((req, res) => {
-        
-        console.log(req);
 
         let query_usuarios = "SELECT * FROM USUARIO";
         connection.query(query_usuarios, (err, results, fields) => {

@@ -29,9 +29,10 @@ public class MainActivity extends AppCompatActivity {
                 try  {
                     URL url = new URL("http://172.16.52.18:3001");
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setRequestMethod("POST");
+
                     urlConnection.setRequestProperty("Content-Type", "application/json");
                     urlConnection.setRequestProperty("Accept", "application/json");
+                    urlConnection.setRequestProperty("Accept-Encoding", "identity");
                     urlConnection.setDoOutput(true);
                     urlConnection.setChunkedStreamingMode(0);
 
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
                     String jsonInputString = "{'name': 'Upendra', 'job': 'Programmer'}";
                     byte[] input = jsonInputString.getBytes("utf-8");
                     out.write(input, 0, input.length);
+                    out.flush();
+                    out.close();
 
                     BufferedReader rd = new BufferedReader(new InputStreamReader(
                             urlConnection.getInputStream()));
