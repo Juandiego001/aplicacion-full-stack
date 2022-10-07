@@ -17,7 +17,13 @@ connection.connect();
 // Routes
 app.route('/')
 
+    .post((req, res) => {
+        console.log(req);
+    })
+
     .get((req, res) => {
+        
+        console.log(req);
 
         let query_usuarios = "SELECT * FROM USUARIO";
         connection.query(query_usuarios, (err, results, fields) => {
@@ -44,6 +50,8 @@ app.route('/')
             }
         })
     })
+
+    
 
 // Starting to listen
 app.listen(port, () => {

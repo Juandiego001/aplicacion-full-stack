@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.HttpURLConnection;
 
@@ -25,8 +27,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try  {
-                    URL url = new URL("http://192.168.1.10:3001");
+                    URL url = new URL("http://172.16.52.18:3001");
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setRequestMethod("POST");
+                    urlConnection.setRequestProperty("Content-Type", "application/json");
+                    urlConnection.setRequestProperty("Accept", "application/json");
+                    urlConnection.setDoOutput(true);
+                    urlConnection.setChunkedStreamingMode(0);
+
+                    OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
+                    String jsonInputString = "{'name': 'Upendra', 'job': 'Programmer'}";
+                    byte[] input = jsonInputString.getBytes("utf-8");
+                    out.write(input, 0, input.length);
+
                     BufferedReader rd = new BufferedReader(new InputStreamReader(
                             urlConnection.getInputStream()));
 
@@ -35,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                     while ((line = rd.readLine()) != null) {
                         Log.i("data", line);
                     }
+
 
                 } catch (Exception e) {
                     Log.d("Error on sign up", "Ocurrió un error al intentar iniciar sesión.");
