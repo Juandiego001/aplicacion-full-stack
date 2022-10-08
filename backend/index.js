@@ -3,6 +3,9 @@ const mysql = require('mysql')
 const app = express()
 const port = 3001
 
+app.use(express.json())
+app.use(express.urlencoded({extended: false}))
+
 // MySQL connection
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -18,9 +21,35 @@ connection.connect();
 app.route('/')
 
     .post((req, res) => {
-        console.log(req);
+        let cedula = req.body.cedula;
+        let contrasena = req.body.contrasena;
+        
+        let query_iniciar = "SELECT * FROM `USUARIO` WHERE `cedula` = ?, `contrasena` = ?";
 
-        res.json({'messsage': 'Hi'});
+        connection.query(query_iniciar, [cedula, contrasena], (err, results, fields) => {
+            if (err) {
+                console.log("There was an error");
+                console.log(err);
+                res.json({
+                        'code': 500,
+                        'message': "There was an server error."
+                });
+            } else {
+                console.log(results);
+                console.log(results.length);
+                // let data = [];
+
+                // for (let i = 0; i < results.length; i++) {
+                //     data.push(results[i]);
+                // }
+    
+                // res.json({
+                //         'code': 200,
+                //         'message': 'Values got it with success',
+                //         'data': data
+                // });
+            }
+        })
     })
 
     .get((req, res) => {
