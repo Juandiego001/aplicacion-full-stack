@@ -24,7 +24,7 @@ app.route('/')
         let cedula = req.body.cedula;
         let contrasena = req.body.contrasena;
         
-        let query_iniciar = "SELECT * FROM `USUARIO` WHERE `cedula` = ?, `contrasena` = ?";
+        let query_iniciar = "SELECT * FROM `USUARIO` WHERE `cedula` = ? AND `contrasena` = ?";
 
         connection.query(query_iniciar, [cedula, contrasena], (err, results, fields) => {
             if (err) {
@@ -35,19 +35,32 @@ app.route('/')
                         'message': "There was an server error."
                 });
             } else {
-                console.log(results);
-                console.log(results.length);
-                // let data = [];
+                
+                // RowDataPacket {
+                //     cedula: 123,
+                //     contrasena: 'juan123',
+                //     nombre: 'Juan',       
+                //     apellido: 'C.',       
+                //     telefono: '3101234446'
+                //   }
 
-                // for (let i = 0; i < results.length; i++) {
-                //     data.push(results[i]);
-                // }
-    
-                // res.json({
-                //         'code': 200,
-                //         'message': 'Values got it with success',
-                //         'data': data
-                // });
+                // If the results length are more than cero, then
+                // it is because there was a succesful login
+                console.log(results);
+                console.log(results[0]);
+
+                if (results.length > 0) {
+                    res.json({
+                        'code': 200,
+                        'message': 'Get values with success.',
+                        'data': results[0]
+                    });
+                } else {
+                    res.json({
+                        'code': 300,
+                        'message': 'There are no users in the database with that values.',
+                    });
+                }
             }
         })
     })
