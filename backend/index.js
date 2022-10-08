@@ -12,7 +12,7 @@ const connection = mysql.createConnection({
     user: 'root',
     password: 'root',
     database: 'app_db'
-})
+});
 
 // For testing connection
 connection.connect();
