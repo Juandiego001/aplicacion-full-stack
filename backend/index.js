@@ -93,8 +93,6 @@ app.route('/')
         })
     })
 
-    
-
 // Starting to listen
 app.listen(port, () => {
     console.log('Server listen on port 3001...')

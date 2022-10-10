@@ -9,7 +9,8 @@ CREATE TABLE USUARIO(
     contrasena VARCHAR(100),
     nombre VARCHAR(100),
     apellido VARCHAR(100),
-    telefono VARCHAR(20)
+    telefono VARCHAR(20),
+    esAdmin VARCHAR(1)
 );
 
 -- Insert test users
