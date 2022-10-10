@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    URL url = new URL("http://172.16.48.6:3001");
+                    URL url = new URL("http://192.168.1.10:3001");
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                     String charset = "UTF-8";
                     urlConnection.setDoOutput(true);
@@ -92,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
                         i.putExtra("apellido", apellido);
                         i.putExtra("telefono", telefono);
                         startActivity(i);
-
-
                     } else {
                         MainActivity.this.runOnUiThread(new Runnable() {
                             public void run() {
