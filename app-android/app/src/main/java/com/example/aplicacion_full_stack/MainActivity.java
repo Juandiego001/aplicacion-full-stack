@@ -28,11 +28,13 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText edCedula;
     private EditText edContrasena;
+    String ip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ip = getString(R.string.ip);
     }
 
     public void iniciarSesion(View v) {
@@ -41,27 +43,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    URL url = new URL("http://192.168.1.10:3001");
-                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                     String charset = "UTF-8";
-                    urlConnection.setDoOutput(true);
-                    urlConnection.setRequestProperty("Accept-Charset", charset);
-                    urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + charset);
 
                     edCedula = (EditText) findViewById(R.id.edCedula);
                     edContrasena = (EditText) findViewById(R.id.edContrasena);
 
-                    Context context = getApplicationContext();
-
                     String cedula = edCedula.getText().toString();
                     String contrasena = edContrasena.getText().toString();
 
-                    String query = String.format("cedula=%s&contrasena=%s",
+                    String query = String.format("?cedula=%s&contrasena=%s",
                             URLEncoder.encode(cedula, charset),
                             URLEncoder.encode(contrasena, charset));
 
-                    OutputStream output = urlConnection.getOutputStream();
-                    output.write(query.getBytes(charset));
+                    Context context = getApplicationContext();
+
+                    URL url = new URL(String.format("http://%s:3001/%s", ip, query));
+                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.setRequestProperty("Accept-Charset", charset);
+                    urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + charset);
 
                     BufferedReader rd = new BufferedReader(new InputStreamReader(
                             urlConnection.getInputStream()));
@@ -109,6 +109,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if (thread.isAlive()) {
+            // Ending thread after there was a successful login
+            thread.interrupt();
+        }
+
         thread.start();
+    }
+
+    public void irRegistrarse(View v) {
+        // We travel the user to the next activity
+        startActivity(new Intent(MainActivity.this, RegistrarseActivity.class));
     }
 }

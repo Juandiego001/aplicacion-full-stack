@@ -20,9 +20,81 @@ connection.connect();
 // Routes
 app.route('/')
 
-    .post((req, res) => {
+    .delete((req, res) => {
         let cedula = req.body.cedula;
-        let contrasena = req.body.contrasena;
+
+        let query_eliminar = "DELETE FROM `USUARIO` WHERE `cedula` = ?";
+
+        connection.query(query_eliminar, [cedula], (err, results, fields) => {
+            if (err) {
+                res.json({
+                    'code': 300,
+                    'message': 'Failed on delete user'
+                })
+            } else {
+                res.json({
+                    'code': 200,
+                    'message': 'User deleted with success'
+                })
+            }
+        })
+    })
+
+    .put((req, res) => {
+        let cedulaOriginal = req.body.cedulaOriginal;
+        let nuevaCedula = req.body.nuevaCedula;
+        let nuevaContrasena = req.body.nuevaContrasena;
+        let nuevoNombre = req.body.nuevoNombre;
+        let nuevoApellido = req.body.nuevoApellido;
+        let nuevoTelefono = req.body.nuevoTelefono;
+
+        let query_actualizar = "UPDATE `USUARIO` SET `cedula` = ?, `contrasena` = ?, `nombre` = ?, " +
+            "`apellido` = ?, `telefono` = ? WHERE cedula = ?";
+
+        connection.query(query_actualizar, [nuevaCedula, nuevaContrasena, nuevoNombre, nuevoApellido, 
+            nuevoTelefono, cedulaOriginal], (err, results, fields) => {
+                if (err) {
+                    res.json({
+                        'code': 300,
+                        'message': 'Failed on update'
+                    })
+                } else {
+                    res.json({
+                        'code': 200,
+                        'message': 'Successful update'
+                    })
+                }
+            })
+    })
+
+    .post((req, res) => {
+      let cedula = req.body.cedula;
+      let contrasena = req.body.contrasena;
+      let nombre = req.body.nombre;
+      let apellido = req.body.apellido;
+      let telefono = req.body.telefono;
+
+      let query_registrarse = "INSERT INTO `USUARIO` VALUES(?, ?, ?, ?, ?)"
+
+      connection.query(query_registrarse, [cedula, contrasena, nombre, apellido, telefono], 
+        (err, results, fields) => {
+            if (err) {
+                res.json({
+                    'code': 300,
+                    'message': 'There was an error while trying to sing up'
+                })
+            } else {
+                res.json({
+                    'code': 200,
+                    'message': 'Successful sing up'
+                })
+            }
+        });
+    })
+
+    .get((req, res) => {
+        let cedula = req.query.cedula;
+        let contrasena = req.query.contrasena;
         
         let query_iniciar = "SELECT * FROM `USUARIO` WHERE `cedula` = ? AND `contrasena` = ?";
 
@@ -44,11 +116,6 @@ app.route('/')
                 //     telefono: '3101234446'
                 //   }
 
-                // If the results length are more than cero, then
-                // it is because there was a succesful login
-                console.log(results);
-                console.log(results[0]);
-
                 if (results.length > 0) {
                     res.json({
                         'code': 200,
@@ -61,34 +128,6 @@ app.route('/')
                         'message': 'There are no users in the database with that values.',
                     });
                 }
-            }
-        })
-    })
-
-    .get((req, res) => {
-
-        let query_usuarios = "SELECT * FROM USUARIO";
-        connection.query(query_usuarios, (err, results, fields) => {
-
-            if (err) {
-                console.log("There was an error");
-                console.log(err);
-                res.json({
-                        'code': 500,
-                        'message': "There was an server error."
-                });
-            } else {
-                let data = [];
-
-                for (let i = 0; i < results.length; i++) {
-                    data.push(results[i]);
-                }
-    
-                res.json({
-                        'code': 200,
-                        'message': 'Values got it with success',
-                        'data': data
-                });
             }
         })
     })
