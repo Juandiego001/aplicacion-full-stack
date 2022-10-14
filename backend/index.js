@@ -106,15 +106,7 @@ app.route('/')
                         'code': 500,
                         'message': "There was an server error."
                 });
-            } else {
-                
-                // RowDataPacket {
-                //     cedula: 123,
-                //     contrasena: 'juan123',
-                //     nombre: 'Juan',       
-                //     apellido: 'C.',       
-                //     telefono: '3101234446'
-                //   }
+            } else {                
 
                 if (results.length > 0) {
                     res.json({

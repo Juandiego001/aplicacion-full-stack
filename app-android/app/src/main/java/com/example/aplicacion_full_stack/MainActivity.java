@@ -100,8 +100,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                     }
-
-                    Log.i("data", jsonResponse);
                 } catch (Exception e) {
                     Log.d("Error on sign up", "Ocurrió un error al intentar iniciar sesión.");
                     Log.d("Error on sign up", e.toString());
